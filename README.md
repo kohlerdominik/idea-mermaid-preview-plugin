@@ -18,11 +18,19 @@
 - [ ] Configure the [CODECOV_TOKEN](https://docs.codecov.com/docs/quick-start) secret for automated test coverage reports on PRs
 
 <!-- Plugin description -->
-This Fancy IntelliJ Platform Plugin is going to be your implementation of the brilliant ideas that you have.
+A high-performance, real-time Mermaid diagram previewer for IntelliJ-based IDEs (IntelliJ IDEA, PHPStorm, WebStorm, etc.).
 
-This specific section is a source for the [plugin.xml](/src/main/resources/META-INF/plugin.xml) file which will be extracted by the [Gradle](/build.gradle.kts) during the build process.
+This plugin provides a split-view editor for Mermaid diagram files (.mmd and .mermaid):
+- **Left pane**: Text editor for writing Mermaid code
+- **Right pane**: Live-rendering preview powered by Chromium (JCEF)
 
-To keep everything working, do not remove `<!-- ... -->` sections. 
+Features:
+- Real-time preview with 300ms throttled updates
+- Automatic theme detection (Light/Dark mode)
+- Interactive preview with pan and zoom controls
+- Syntax error feedback with helpful error messages
+- Support for all Mermaid diagram types (flowchart, sequence, class, state, etc.)
+
 <!-- Plugin description end -->
 
 ## Installation
