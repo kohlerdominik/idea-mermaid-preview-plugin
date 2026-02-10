@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mermaid Preview</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            overflow: auto;
+            padding: 20px;
+            background-color: #ffffff;
+        }
+        
+        body.dark {
+            background-color: #2b2b2b;
+            color: #a9b7c6;
+        }
+        
+        #diagram {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        #diagram svg {
+            max-width: 100%;
+            height: auto;
+        }
+        
+        .error {
+            color: #ff6b68;
+            padding: 20px;
+            border: 1px solid #ff6b68;
+            border-radius: 4px;
+            background-color: rgba(255, 107, 104, 0.1);
+            font-family: 'JetBrains Mono', 'Courier New', monospace;
+            white-space: pre-wrap;
+            max-width: 800px;
+        }
+        
+        .empty {
+            color: #888;
+            padding: 20px;
+            text-align: center;
+            font-style: italic;
+        }
+        
+        .dark .empty {
+            color: #606060;
+        }
+    </style>
+</head>
+<body>
+    <div id="diagram">
+        <div class="empty">Start typing Mermaid diagram code in the editor...</div>
+    </div>
+    
+    <script>
+        // Initialize Mermaid with default configuration
+        mermaid.initialize({ 
+            startOnLoad: false,
+            theme: 'default',
+            securityLevel: 'loose',
+            fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif'
+        });
+        
+        let renderCounter = 0;
+        
+        /**
+         * Render a Mermaid diagram from code.
+         * @param {string} code - The Mermaid diagram code
+         * @param {string} theme - The theme to use ('default', 'dark', 'neutral', etc.)
+         */
+        window.renderMermaid = function(code, theme) {
+            theme = theme || 'default';
+            
+            // Update theme
+            mermaid.initialize({ 
+                startOnLoad: false,
+                theme: theme,
+                securityLevel: 'loose',
+                fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif'
+            });
+            
+            // Update body class for theme
+            if (theme === 'dark') {
+                document.body.classList.add('dark');
+            } else {
+                document.body.classList.remove('dark');
+            }
+            
+            const diagram = document.getElementById('diagram');
+            
+            // Handle empty content
+            if (!code || code.trim() === '') {
+                diagram.innerHTML = '<div class="empty">Start typing Mermaid diagram code in the editor...</div>';
+                return;
+            }
+            
+            // Render the diagram
+            const id = 'mermaid-diagram-' + (++renderCounter);
+            
+            try {
+                mermaid.render(id, code).then(result => {
+                    diagram.innerHTML = result.svg;
+                    
+                    // Add pan and zoom capability
+                    addPanZoom();
+                }).catch(err => {
+                    console.error('Mermaid rendering error:', err);
+                    let errorMessage = err.message || err.toString();
+                    
+                    // Extract useful error information
+                    if (err.str) {
+                        errorMessage = err.str;
+                    }
+                    
+                    diagram.innerHTML = '<div class="error"><strong>Syntax Error:</strong>\n\n' + 
+                        escapeHtml(errorMessage) + '</div>';
+                });
+            } catch (err) {
+                console.error('Mermaid rendering exception:', err);
+                diagram.innerHTML = '<div class="error"><strong>Error:</strong>\n\n' + 
+                    escapeHtml(err.message || err.toString()) + '</div>';
+            }
+        };
+        
+        /**
+         * Add basic pan and zoom capability to the SVG.
+         */
+        function addPanZoom() {
+            const svg = document.querySelector('#diagram svg');
+            if (!svg) return;
+            
+            let scale = 1;
+            let panning = false;
+            let pointX = 0;
+            let pointY = 0;
+            let start = { x: 0, y: 0 };
+            let transform = { x: 0, y: 0 };
+            
+            // Zoom on mouse wheel
+            svg.addEventListener('wheel', function(e) {
+                e.preventDefault();
+                const delta = e.deltaY > 0 ? 0.9 : 1.1;
+                scale *= delta;
+                scale = Math.min(Math.max(0.1, scale), 10);
+                updateTransform();
+            });
+            
+            // Pan on mouse drag
+            svg.addEventListener('mousedown', function(e) {
+                e.preventDefault();
+                start = { x: e.clientX - transform.x, y: e.clientY - transform.y };
+                panning = true;
+            });
+            
+            svg.addEventListener('mousemove', function(e) {
+                if (!panning) return;
+                e.preventDefault();
+                transform.x = e.clientX - start.x;
+                transform.y = e.clientY - start.y;
+                updateTransform();
+            });
+            
+            svg.addEventListener('mouseup', function(e) {
+                panning = false;
+            });
+            
+            svg.addEventListener('mouseleave', function(e) {
+                panning = false;
+            });
+            
+            function updateTransform() {
+                svg.style.transform = `translate(${transform.x}px, ${transform.y}px) scale(${scale})`;
+                svg.style.cursor = panning ? 'grabbing' : 'grab';
+            }
+        }
+        
+        /**
+         * Escape HTML special characters.
+         */
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+        
+        // Log that the page is ready
+        console.log('Mermaid preview ready');
+    </script>
+</body>
+</html>

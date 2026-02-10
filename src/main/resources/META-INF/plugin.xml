@@ -9,7 +9,14 @@
     <resource-bundle>messages.MyBundle</resource-bundle>
 
     <extensions defaultExtensionNs="com.intellij">
-        <toolWindow factoryClass="com.github.kohlerdominik.ideamermaidpreview.toolWindow.MyToolWindowFactory" id="MyToolWindow"/>
-        <postStartupActivity implementation="com.github.kohlerdominik.ideamermaidpreview.startup.MyProjectActivity" />
+        <!-- Mermaid File Type Registration -->
+        <fileType 
+            name="Mermaid" 
+            implementationClass="com.github.kohlerdominik.ideamermaidpreview.file.MermaidFileType"
+            extensions="mmd;mermaid"
+            language="TEXT"/>
+        
+        <!-- Mermaid Split Editor Provider -->
+        <fileEditorProvider implementation="com.github.kohlerdominik.ideamermaidpreview.editor.MermaidSplitEditorProvider"/>
     </extensions>
 </idea-plugin>
