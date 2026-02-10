@@ -1,6 +1,6 @@
 <!-- Keep a Changelog guide -> https://keepachangelog.com -->
 
-# idea-mermaid-preview Changelog
+# Mermaid Preview Changelog
 
 ## [Unreleased]
 ### Added
