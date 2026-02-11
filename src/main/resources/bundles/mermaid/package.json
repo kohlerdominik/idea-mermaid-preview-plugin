@@ -18,6 +18,102 @@
         "language": "mermaid",
         "scopeName": "source.mermaid",
         "path": "./syntaxes/mermaid.tmLanguage.json"
+      },
+      {
+        "scopeName": "source.mermaid.architecture",
+        "path": "./syntaxes/mermaid-architecture.tmLanguage.json"
+      },
+      {
+        "scopeName": "source.mermaid.block",
+        "path": "./syntaxes/mermaid-block.tmLanguage.json"
+      },
+      {
+        "scopeName": "source.mermaid.c4Diagram",
+        "path": "./syntaxes/mermaid-c4Diagram.tmLanguage.json"
+      },
+      {
+        "scopeName": "source.mermaid.classDiagram",
+        "path": "./syntaxes/mermaid-classDiagram.tmLanguage.json"
+      },
+      {
+        "scopeName": "source.mermaid.erDiagram",
+        "path": "./syntaxes/mermaid-erDiagram.tmLanguage.json"
+      },
+      {
+        "scopeName": "source.mermaid.flowchart",
+        "path": "./syntaxes/mermaid-flowchart.tmLanguage.json"
+      },
+      {
+        "scopeName": "source.mermaid.gantt",
+        "path": "./syntaxes/mermaid-gantt.tmLanguage.json"
+      },
+      {
+        "scopeName": "source.mermaid.gitGraph",
+        "path": "./syntaxes/mermaid-gitGraph.tmLanguage.json"
+      },
+      {
+        "scopeName": "source.mermaid.info",
+        "path": "./syntaxes/mermaid-info.tmLanguage.json"
+      },
+      {
+        "scopeName": "source.mermaid.journey",
+        "path": "./syntaxes/mermaid-journey.tmLanguage.json"
+      },
+      {
+        "scopeName": "source.mermaid.kanban",
+        "path": "./syntaxes/mermaid-kanban.tmLanguage.json"
+      },
+      {
+        "scopeName": "source.mermaid.embedded.markdown",
+        "path": "./syntaxes/mermaid-markdown.json"
+      },
+      {
+        "scopeName": "source.mermaid.mindmap",
+        "path": "./syntaxes/mermaid-mindmap.tmLanguage.json"
+      },
+      {
+        "scopeName": "source.mermaid.packet",
+        "path": "./syntaxes/mermaid-packet.tmLanguage.json"
+      },
+      {
+        "scopeName": "source.mermaid.pie",
+        "path": "./syntaxes/mermaid-pie.tmLanguage.json"
+      },
+      {
+        "scopeName": "source.mermaid.quadrantChart",
+        "path": "./syntaxes/mermaid-quadrantChart.tmLanguage.json"
+      },
+      {
+        "scopeName": "source.mermaid.radar",
+        "path": "./syntaxes/mermaid-radar.tmLanguage.json"
+      },
+      {
+        "scopeName": "source.mermaid.requirementDiagram",
+        "path": "./syntaxes/mermaid-requirementDiagram.tmLanguage.json"
+      },
+      {
+        "scopeName": "source.mermaid.sankey",
+        "path": "./syntaxes/mermaid-sankeyDiagram.tmLanguage.json"
+      },
+      {
+        "scopeName": "source.mermaid.sequenceDiagram",
+        "path": "./syntaxes/mermaid-sequenceDiagram.tmLanguage.json"
+      },
+      {
+        "scopeName": "source.mermaid.stateDiagram",
+        "path": "./syntaxes/mermaid-stateDiagram.tmLanguage.json"
+      },
+      {
+        "scopeName": "source.mermaid.timeline",
+        "path": "./syntaxes/mermaid-timeline.tmLanguage.json"
+      },
+      {
+        "scopeName": "source.mermaid.xychart",
+        "path": "./syntaxes/mermaid-xychart.tmLanguage.json"
+      },
+      {
+        "scopeName": "source.mermaid.zenuml",
+        "path": "./syntaxes/mermaid-zenuml.tmLanguage.json"
       }
     ]
   }
