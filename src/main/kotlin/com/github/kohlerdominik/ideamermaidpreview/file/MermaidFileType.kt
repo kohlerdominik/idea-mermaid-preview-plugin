@@ -5,7 +5,7 @@ import com.github.kohlerdominik.ideamermaidpreview.language.MermaidLanguage
 import javax.swing.Icon
 
 /**
- * File type for Mermaid diagram files (.mmd and .mermaid extensions).
+ * File type for Mermaid diagram files.
  */
 object MermaidFileType : LanguageFileType(MermaidLanguage) {
     override fun getName(): String = "Mermaid"

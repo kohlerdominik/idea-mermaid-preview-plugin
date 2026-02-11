@@ -1,0 +1,24 @@
+{
+  "name": "mermaid",
+  "version": "1.0.0",
+  "engines": {
+    "vscode": "^1.0.0"
+  },
+  "contributes": {
+    "languages": [
+      {
+        "id": "Mermaid",
+        "aliases": ["Mermaid", "mermaid"],
+        "extensions": [".mmd", ".mermaid"],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "Mermaid",
+        "scopeName": "source.mermaid",
+        "path": "./Syntaxes/mermaid.tmLanguage.json"
+      }
+    ]
+  }
+}
