@@ -123,10 +123,13 @@ class MermaidPreviewPanel(
      * Load the HTML content with Mermaid.js.
      */
     private fun loadHtmlContent() {
-        val htmlContent = javaClass.getResource("/mermaid/index.html")?.readText() 
-            ?: createDefaultHtml()
-        
-        browser.loadHTML(htmlContent)
+        val resource = javaClass.getResource("/mermaid/index.html")
+        if (resource != null) {
+            // Use the resource URL as the base URL so that relative paths (like mermaid.min.js) resolve correctly
+            browser.loadHTML(resource.readText(), resource.toExternalForm())
+        } else {
+            browser.loadHTML(createDefaultHtml())
+        }
     }
     
     /**

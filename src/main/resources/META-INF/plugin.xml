@@ -5,12 +5,9 @@
     <vendor>kohlerdominik</vendor>
 
     <depends>com.intellij.modules.platform</depends>
+    <depends>org.jetbrains.plugins.textmate</depends>
 
     <extensions defaultExtensionNs="com.intellij">
-        <!-- Mermaid Language Definition -->
-        <lang.syntaxHighlighterFactory 
-            language="Mermaid" 
-            implementationClass="com.github.kohlerdominik.ideamermaidpreview.language.MermaidSyntaxHighlighterFactory"/>
         
         <!-- Mermaid File Type Registration -->
         <fileType 
@@ -21,5 +18,8 @@
         
         <!-- Mermaid Split Editor Provider -->
         <fileEditorProvider implementation="com.github.kohlerdominik.ideamermaidpreview.editor.MermaidSplitEditorProvider"/>
+
+        <!-- TextMate Grammar Support -->
+        <com.intellij.textmate.bundledBundle path="textmate/mermaid"/>
     </extensions>
 </idea-plugin>
