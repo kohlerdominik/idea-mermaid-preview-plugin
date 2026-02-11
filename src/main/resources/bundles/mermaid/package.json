@@ -17,7 +17,7 @@
       {
         "language": "Mermaid",
         "scopeName": "source.mermaid",
-        "path": "./Syntaxes/mermaid.tmLanguage.json"
+        "path": "./syntaxes/mermaid.tmLanguage.json"
       }
     ]
   }

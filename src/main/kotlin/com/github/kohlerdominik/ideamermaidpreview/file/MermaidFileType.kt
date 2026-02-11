@@ -1,6 +1,7 @@
 package com.github.kohlerdominik.ideamermaidpreview.file
 
 import com.intellij.openapi.fileTypes.LanguageFileType
+import com.intellij.openapi.util.IconLoader
 import com.github.kohlerdominik.ideamermaidpreview.language.MermaidLanguage
 import javax.swing.Icon
 
@@ -14,5 +15,5 @@ object MermaidFileType : LanguageFileType(MermaidLanguage) {
     
     override fun getDefaultExtension(): String = "mmd"
     
-    override fun getIcon(): Icon? = null
+    override fun getIcon(): Icon? = null // Add icon later if needed
 }
