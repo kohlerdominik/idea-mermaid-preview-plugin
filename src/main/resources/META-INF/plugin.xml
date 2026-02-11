@@ -9,13 +9,6 @@
 
     <extensions defaultExtensionNs="com.intellij">
         
-        <!-- Mermaid File Type Registration -->
-        <fileType 
-            name="Mermaid" 
-            implementationClass="com.github.kohlerdominik.ideamermaidpreview.file.MermaidFileType"
-            extensions="mmd;mermaid"
-            language="Mermaid"/>
-        
         <!-- Mermaid Split Editor Provider -->
         <fileEditorProvider implementation="com.github.kohlerdominik.ideamermaidpreview.editor.MermaidSplitEditorProvider"/>
 

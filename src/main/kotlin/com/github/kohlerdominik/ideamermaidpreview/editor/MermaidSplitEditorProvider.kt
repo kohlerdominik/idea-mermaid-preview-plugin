@@ -9,16 +9,18 @@ import com.intellij.openapi.fileEditor.impl.text.TextEditorProvider
 import com.intellij.openapi.project.DumbAware
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
-import com.github.kohlerdominik.ideamermaidpreview.file.MermaidFileType
 
 /**
  * File editor provider for Mermaid files.
  * Creates a split-view editor with text on the left and preview on the right.
  */
 class MermaidSplitEditorProvider : FileEditorProvider, DumbAware {
+
+    private val supportedExtensions = setOf("mmd", "mermaid")
     
     override fun accept(project: Project, file: VirtualFile): Boolean {
-        return file.fileType == MermaidFileType
+        val extension = file.extension?.lowercase()
+        return extension in supportedExtensions
     }
     
     override fun createEditor(project: Project, file: VirtualFile): FileEditor {
