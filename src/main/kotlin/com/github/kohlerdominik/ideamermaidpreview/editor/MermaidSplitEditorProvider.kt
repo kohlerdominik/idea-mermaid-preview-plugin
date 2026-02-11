@@ -1,8 +1,8 @@
 package com.github.kohlerdominik.ideamermaidpreview.editor
 
-import com.intellij.openapi.fileEditor.AsyncFileEditorProvider
 import com.intellij.openapi.fileEditor.FileEditor
 import com.intellij.openapi.fileEditor.FileEditorPolicy
+import com.intellij.openapi.fileEditor.FileEditorProvider
 import com.intellij.openapi.fileEditor.TextEditor
 import com.intellij.openapi.fileEditor.TextEditorWithPreview
 import com.intellij.openapi.fileEditor.impl.text.TextEditorProvider
@@ -15,7 +15,7 @@ import com.github.kohlerdominik.ideamermaidpreview.file.MermaidFileType
  * File editor provider for Mermaid files.
  * Creates a split-view editor with text on the left and preview on the right.
  */
-class MermaidSplitEditorProvider : AsyncFileEditorProvider, DumbAware {
+class MermaidSplitEditorProvider : FileEditorProvider, DumbAware {
     
     override fun accept(project: Project, file: VirtualFile): Boolean {
         return file.fileType == MermaidFileType
