@@ -6,6 +6,7 @@ import com.intellij.openapi.fileEditor.FileEditorProvider
 import com.intellij.openapi.fileEditor.TextEditor
 import com.intellij.openapi.fileEditor.TextEditorWithPreview
 import com.intellij.openapi.fileEditor.impl.text.TextEditorProvider
+import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.project.DumbAware
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
@@ -24,6 +25,7 @@ class MermaidSplitEditorProvider : FileEditorProvider, DumbAware {
     }
     
     override fun createEditor(project: Project, file: VirtualFile): FileEditor {
+        LOG.info("Creating Mermaid editor for: ${file.path}")
         // Check if JCEF is supported
         if (!MermaidPreviewEditor.isJcefSupported()) {
             // Fall back to text editor only if JCEF is not supported
@@ -50,4 +52,8 @@ class MermaidSplitEditorProvider : FileEditorProvider, DumbAware {
     override fun getEditorTypeId(): String = "mermaid-split-editor"
     
     override fun getPolicy(): FileEditorPolicy = FileEditorPolicy.HIDE_DEFAULT_EDITOR
+
+    private companion object {
+        val LOG: Logger = Logger.getInstance(MermaidSplitEditorProvider::class.java)
+    }
 }
