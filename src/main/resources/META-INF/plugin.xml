@@ -20,6 +20,6 @@
         <fileEditorProvider implementation="com.github.kohlerdominik.ideamermaidpreview.editor.MermaidSplitEditorProvider"/>
 
         <!-- TextMate Grammar Support -->
-        <textmate.bundleProvider implementation="com.github.kohlerdominik.ideamermaidpreview.editor.MermaidBundleProvider"/>
+        <com.intellij.textmate.bundledBundle path="bundles/mermaid"/>
     </extensions>
 </idea-plugin>
