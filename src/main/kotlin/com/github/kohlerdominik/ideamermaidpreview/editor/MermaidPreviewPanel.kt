@@ -171,7 +171,6 @@ class MermaidPreviewPanel(
     }
     
     override fun dispose() {
-        textEditor?.editor?.document?.removeDocumentListener(documentListener)
         updateAlarm.cancelAllRequests()
         Disposer.dispose(browser)
     }

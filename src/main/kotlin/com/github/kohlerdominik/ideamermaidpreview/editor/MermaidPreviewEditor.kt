@@ -24,7 +24,7 @@ class MermaidPreviewEditor(
     
     override fun getPreferredFocusedComponent(): JComponent = preview.component
     
-    override fun getName(): String = "Mermaid Preview"
+    override fun getName(): String = "Mermaid Preview Plugin"
     
     override fun setState(state: FileEditorState) {}
     

@@ -43,11 +43,11 @@ class MermaidSplitEditorProvider : FileEditorProvider, DumbAware {
         return TextEditorWithPreview(
             textEditor,
             previewEditor,
-            "Mermaid Editor"
+            "Mermaid Preview Plugin"
         )
     }
     
     override fun getEditorTypeId(): String = "mermaid-split-editor"
     
-    override fun getPolicy(): FileEditorPolicy = FileEditorPolicy.HIDE_DEFAULT_EDITOR
+    override fun getPolicy(): FileEditorPolicy = FileEditorPolicy.PLACE_BEFORE_DEFAULT_EDITOR
 }
