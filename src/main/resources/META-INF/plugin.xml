@@ -9,6 +9,8 @@
     <extensions defaultExtensionNs="com.intellij">
         
         <!-- Mermaid Split Editor Provider -->
-        <fileEditorProvider implementation="com.github.kohlerdominik.ideamermaidpreview.editor.MermaidSplitEditorProvider"/>
+        <fileEditorProvider
+            implementation="com.github.kohlerdominik.ideamermaidpreview.editor.MermaidSplitEditorProvider"
+            order="before com.intellij.mermaid"/>
     </extensions>
 </idea-plugin>
