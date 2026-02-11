@@ -28,8 +28,8 @@
         
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            overflow: auto;
-            padding: 20px;
+            height: 100vh;
+            overflow: hidden;
             background-color: #ffffff;
         }
         
@@ -39,7 +39,9 @@
         }
         
         #diagram {
-            min-height: 100vh;
+            height: 100%;
+            overflow: auto;
+            padding: 20px;
             display: flex;
             align-items: center;
             justify-content: center;

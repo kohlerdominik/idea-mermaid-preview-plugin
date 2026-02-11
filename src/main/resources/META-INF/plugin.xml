@@ -4,6 +4,7 @@
     <name>Mermaid Preview</name>
     <vendor url="https://github.com/kohlerdominik">Dominik Kohler</vendor>
     <url>https://github.com/kohlerdominik/idea-mermaid-preview-plugin</url>
+    <icon>META-INF/pluginIcon.png</icon>
 
     <description><![CDATA[
         <p><img src="https://raw.githubusercontent.com/kohlerdominik/idea-mermaid-preview-plugin/main/docs/screenshot.png" alt="Mermaid preview screenshot"/></p>
