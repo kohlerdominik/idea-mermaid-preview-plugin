@@ -13,3 +13,12 @@
 - Syntax error feedback with detailed error messages
 - Support for all Mermaid diagram types
 - Fallback to text-only editor when JCEF is not supported
+- Basic Mermaid language support with syntax highlighter framework
+
+### Fixed
+- Fixed critical crash when opening Mermaid files (AsyncFileEditorProvider implementation)
+- Plugin name changed from "idea-mermaid-preview" to "Mermaid Preview" to comply with JetBrains guidelines
+
+### Removed
+- Template demo files (MyBundle.kt, MyBundle.properties)
+- Unused resource-bundle configuration
