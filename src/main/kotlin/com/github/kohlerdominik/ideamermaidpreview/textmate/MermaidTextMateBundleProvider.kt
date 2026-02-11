@@ -51,7 +51,49 @@ class MermaidTextMateBundleProvider : TextMateBundleProvider {
                 0
             }
 
-            LOG.info("TextMate bundle diagnostics: grammars=$grammarCount, hasClassDiagram=$hasClassDiagram, syntaxesFiles=$syntaxesCount")
+            val syntaxPaths = Regex("""\"path\"\s*:\s*\"\./syntaxes/([^\"]+)\"""")
+                .findAll(packageText)
+                .map { it.groupValues[1] }
+                .toSet()
+
+            val syntaxFiles = if (Files.isDirectory(syntaxesDir)) {
+                Files.list(syntaxesDir).use { stream ->
+                    stream.filter { Files.isRegularFile(it) }
+                        .map { it.fileName.toString() }
+                        .toList()
+                }
+            } else {
+                emptyList()
+            }
+
+            val missingInDir = syntaxPaths.filter { path -> !Files.exists(syntaxesDir.resolve(path)) }
+            val extraInDir = syntaxFiles.filter { name -> name !in syntaxPaths }
+
+            val missingScopeName = syntaxFiles.filter { name ->
+                val filePath = syntaxesDir.resolve(name)
+                if (!Files.isRegularFile(filePath)) {
+                    false
+                } else {
+                    val text = Files.readString(filePath, StandardCharsets.UTF_8)
+                    !text.contains("\"scopeName\"")
+                }
+            }
+
+            LOG.info(
+                "TextMate bundle diagnostics: grammars=$grammarCount, hasClassDiagram=$hasClassDiagram, " +
+                    "syntaxesFiles=$syntaxesCount, missingInDir=${missingInDir.size}, extraInDir=${extraInDir.size}, " +
+                    "missingScopeName=${missingScopeName.size}"
+            )
+
+            if (missingInDir.isNotEmpty()) {
+                LOG.warn("TextMate bundle diagnostics: paths missing in syntaxes dir: ${missingInDir.joinToString(", ")}")
+            }
+            if (extraInDir.isNotEmpty()) {
+                LOG.warn("TextMate bundle diagnostics: extra files in syntaxes dir: ${extraInDir.joinToString(", ")}")
+            }
+            if (missingScopeName.isNotEmpty()) {
+                LOG.warn("TextMate bundle diagnostics: files missing scopeName: ${missingScopeName.joinToString(", ")}")
+            }
         } catch (e: Exception) {
             LOG.warn("TextMate bundle diagnostics failed", e)
         }

@@ -8,6 +8,7 @@ import com.intellij.openapi.fileEditor.TextEditorWithPreview
 import com.intellij.openapi.fileEditor.impl.text.TextEditorProvider
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.fileEditor.FileDocumentManager
+import com.intellij.openapi.fileTypes.LanguageFileType
 import com.intellij.openapi.project.DumbAware
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
@@ -28,6 +29,7 @@ class MermaidSplitEditorProvider : FileEditorProvider, DumbAware {
     
     override fun createEditor(project: Project, file: VirtualFile): FileEditor {
         LOG.info("Creating Mermaid editor for: ${file.path}")
+        logFileTypeDetails(file)
         logTextMateDescriptor(file)
         // Check if JCEF is supported
         if (!MermaidPreviewEditor.isJcefSupported()) {
@@ -64,15 +66,30 @@ class MermaidSplitEditorProvider : FileEditorProvider, DumbAware {
         try {
             val descriptor = TextMateService.getInstance().getLanguageDescriptorByFileName(file.name)
             val hasDescriptor = descriptor != null
+            val extDescriptor = TextMateService.getInstance().getLanguageDescriptorByExtension(file.extension)
+            val hasExtDescriptor = extDescriptor != null
             val doc = FileDocumentManager.getInstance().getDocument(file)
             val firstLine = doc?.getLineStartOffset(0)?.let { start ->
                 val end = doc.getLineEndOffset(0)
                 doc.getText(com.intellij.openapi.util.TextRange(start, end)).trim()
             } ?: ""
             val hasClassDiagram = firstLine.contains("classDiagram")
-            LOG.info("TextMate descriptor: present=$hasDescriptor, hasClassDiagram=$hasClassDiagram")
+            LOG.info("TextMate descriptor: present=$hasDescriptor, byExtension=$hasExtDescriptor, hasClassDiagram=$hasClassDiagram")
         } catch (e: Exception) {
             LOG.warn("TextMate descriptor log failed", e)
+        }
+    }
+
+    private fun logFileTypeDetails(file: VirtualFile) {
+        try {
+            val fileType = file.fileType
+            val languageId = (fileType as? LanguageFileType)?.language?.id ?: "<none>"
+            LOG.info(
+                "Mermaid file type: name=${fileType.name}, class=${fileType.javaClass.name}, " +
+                    "ext=${file.extension}, language=$languageId"
+            )
+        } catch (e: Exception) {
+            LOG.warn("Mermaid file type log failed", e)
         }
     }
 }
