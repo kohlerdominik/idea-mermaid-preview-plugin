@@ -1,12 +1,15 @@
 package com.github.kohlerdominik.ideamermaidpreview.editor
 
 import com.intellij.openapi.Disposable
+import com.intellij.openapi.application.ApplicationManager
+import com.intellij.openapi.application.ModalityState
 import com.intellij.openapi.diagnostic.thisLogger
 import com.intellij.openapi.editor.Document
 import com.intellij.openapi.editor.event.DocumentEvent
 import com.intellij.openapi.editor.event.DocumentListener
 import com.intellij.openapi.fileEditor.TextEditor
 import com.intellij.openapi.util.Disposer
+import com.intellij.ui.jcef.JBCefApp
 import com.intellij.ui.jcef.JBCefBrowser
 import com.intellij.util.Alarm
 import com.intellij.openapi.editor.colors.EditorColorsManager
@@ -25,7 +28,7 @@ import javax.swing.JPanel
 class MermaidPreviewPanel(
 ) : Disposable {
 
-    private val browser = JBCefBrowser()
+    private var browser: JBCefBrowser? = null
     private val panel = JPanel(BorderLayout())
     private val updateAlarm = Alarm(Alarm.ThreadToUse.POOLED_THREAD, this)
     private var textEditor: TextEditor? = null
@@ -42,20 +45,7 @@ class MermaidPreviewPanel(
         get() = panel
     
     init {
-        panel.add(browser.component, BorderLayout.CENTER)
-        
-        // Add load handler to track when page is ready
-        browser.jbCefClient.addLoadHandler(object : CefLoadHandlerAdapter() {
-            override fun onLoadEnd(browser: CefBrowser?, frame: CefFrame?, httpStatusCode: Int) {
-                if (frame?.isMain == true) {
-                    isPageLoaded = true
-                    // Initial render after page loads
-                    textEditor?.let { renderCurrentContent(it.editor.document) }
-                }
-            }
-        }, browser.cefBrowser)
-        
-        loadHtmlContent()
+        scheduleBrowserInit()
     }
     
     /**
@@ -65,6 +55,8 @@ class MermaidPreviewPanel(
         textEditor?.editor?.document?.removeDocumentListener(documentListener)
         textEditor = editor
         editor.editor.document.addDocumentListener(documentListener, this)
+
+        scheduleBrowserInit()
         
         // Initial render if page is already loaded
         if (isPageLoaded) {
@@ -81,11 +73,44 @@ class MermaidPreviewPanel(
             renderCurrentContent(document)
         }, UPDATE_DELAY_MS)
     }
+
+    private fun scheduleBrowserInit() {
+        if (browser != null) return
+
+        ApplicationManager.getApplication().invokeLater({
+            if (Disposer.isDisposed(this) || browser != null) return@invokeLater
+            if (!JBCefApp.isSupported()) return@invokeLater
+
+            val createdBrowser = JBCefBrowser()
+            browser = createdBrowser
+            panel.add(createdBrowser.component, BorderLayout.CENTER)
+            panel.revalidate()
+            panel.repaint()
+
+            registerLoadHandler(createdBrowser)
+            loadHtmlContent(createdBrowser)
+        }, ModalityState.any())
+    }
+
+    private fun registerLoadHandler(cefBrowser: JBCefBrowser) {
+        cefBrowser.jbCefClient.addLoadHandler(object : CefLoadHandlerAdapter() {
+            override fun onLoadEnd(browser: CefBrowser?, frame: CefFrame?, httpStatusCode: Int) {
+                if (frame?.isMain == true) {
+                    isPageLoaded = true
+                    textEditor?.let { renderCurrentContent(it.editor.document) }
+                }
+            }
+        }, cefBrowser.cefBrowser)
+    }
     
     /**
      * Render the current document content in the browser.
      */
     private fun renderCurrentContent(document: Document) {
+        val activeBrowser = browser ?: run {
+            scheduleBrowserInit()
+            return
+        }
         if (!isPageLoaded) return
 
         val escapedContent = document.text
@@ -98,7 +123,7 @@ class MermaidPreviewPanel(
         val script = "window.renderMermaid(`$escapedContent`, '$theme');"
         
         UIUtil.invokeLaterIfNeeded {
-            browser.cefBrowser.executeJavaScript(script, browser.cefBrowser.url, 0)
+            activeBrowser.cefBrowser.executeJavaScript(script, activeBrowser.cefBrowser.url, 0)
         }
     }
     
@@ -113,13 +138,13 @@ class MermaidPreviewPanel(
     /**
      * Load the HTML content with Mermaid.js.
      */
-    private fun loadHtmlContent() {
+    private fun loadHtmlContent(cefBrowser: JBCefBrowser) {
         val resource = javaClass.getResource("/mermaid/index.html")
         if (resource != null) {
             // Use the resource URL as the base URL so that relative paths (like mermaid.min.js) resolve correctly
-            browser.loadHTML(resource.readText(), resource.toExternalForm())
+            cefBrowser.loadHTML(resource.readText(), resource.toExternalForm())
         } else {
-            browser.loadHTML(createDefaultHtml())
+            cefBrowser.loadHTML(createDefaultHtml())
         }
     }
     
@@ -172,7 +197,7 @@ class MermaidPreviewPanel(
     
     override fun dispose() {
         updateAlarm.cancelAllRequests()
-        Disposer.dispose(browser)
+        browser?.let { Disposer.dispose(it) }
     }
 
     private companion object {

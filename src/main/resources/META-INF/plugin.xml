@@ -2,7 +2,21 @@
 <idea-plugin>
     <id>com.github.kohlerdominik.ideamermaidpreview</id>
     <name>Mermaid Preview</name>
-    <vendor>kohlerdominik</vendor>
+    <vendor url="https://github.com/kohlerdominik">Dominik Kohler</vendor>
+    <url>https://github.com/kohlerdominik/idea-mermaid-preview-plugin</url>
+
+    <description><![CDATA[
+        <p><img src="https://raw.githubusercontent.com/kohlerdominik/idea-mermaid-preview-plugin/main/docs/screenshot.png" alt="Mermaid preview screenshot"/></p>
+        <p>Adds an always-up-to-date Mermaid preview panel for .mmd and .mermaid files.</p>
+        <p>Install it alongside the built-in Mermaid plugin (<code>com.intellij.mermaid</code>) to get syntax highlighting in the editor.</p>
+        <ul>
+            <li>Always-up-to-date rendering by loading Mermaid from the latest CDN release</li>
+            <li>Fast split-view workflow for writing and validating diagrams side-by-side</li>
+            <li>Full Mermaid feature coverage (flowchart, sequence, class, state, and more)</li>
+            <li>Interactive preview with pan and zoom</li>
+            <li>Automatic theme detection (Light/Dark mode)</li>
+        </ul>
+    ]]></description>
 
     <depends>com.intellij.modules.platform</depends>
 
