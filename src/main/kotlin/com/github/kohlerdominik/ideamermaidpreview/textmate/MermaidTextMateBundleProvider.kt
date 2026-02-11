@@ -9,6 +9,7 @@ import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
 import java.nio.file.StandardCopyOption
+import java.nio.charset.StandardCharsets
 import java.util.jar.JarFile
 import java.net.JarURLConnection
 
@@ -27,8 +28,33 @@ class MermaidTextMateBundleProvider : TextMateBundleProvider {
             return emptyList()
         }
 
+        logBundleDiagnostics(bundlePath)
         LOG.info("Registering TextMate bundle from: ${bundlePath.toAbsolutePath()}")
         return listOf(TextMateBundleProvider.PluginBundle("mermaid", bundlePath))
+    }
+
+    private fun logBundleDiagnostics(bundlePath: Path) {
+        try {
+            val packageJson = bundlePath.resolve("package.json")
+            if (!Files.exists(packageJson)) {
+                LOG.warn("TextMate bundle missing package.json at: ${packageJson.toAbsolutePath()}")
+                return
+            }
+
+            val packageText = Files.readString(packageJson, StandardCharsets.UTF_8)
+            val grammarCount = Regex("\\\"scopeName\\\"\\s*:\\s*\\\"[^\\\"]+\\\"").findAll(packageText).count()
+            val hasClassDiagram = packageText.contains("source.mermaid.classDiagram")
+            val syntaxesDir = bundlePath.resolve("syntaxes")
+            val syntaxesCount = if (Files.isDirectory(syntaxesDir)) {
+                Files.list(syntaxesDir).use { stream -> stream.count() }
+            } else {
+                0
+            }
+
+            LOG.info("TextMate bundle diagnostics: grammars=$grammarCount, hasClassDiagram=$hasClassDiagram, syntaxesFiles=$syntaxesCount")
+        } catch (e: Exception) {
+            LOG.warn("TextMate bundle diagnostics failed", e)
+        }
     }
 
     private fun resolveBundlePath(): Path? {
