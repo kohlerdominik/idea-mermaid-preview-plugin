@@ -7,9 +7,11 @@ import com.intellij.openapi.fileEditor.TextEditor
 import com.intellij.openapi.fileEditor.TextEditorWithPreview
 import com.intellij.openapi.fileEditor.impl.text.TextEditorProvider
 import com.intellij.openapi.diagnostic.Logger
+import com.intellij.openapi.fileEditor.FileDocumentManager
 import com.intellij.openapi.project.DumbAware
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
+import org.jetbrains.plugins.textmate.TextMateService
 
 /**
  * File editor provider for Mermaid files.
@@ -26,6 +28,7 @@ class MermaidSplitEditorProvider : FileEditorProvider, DumbAware {
     
     override fun createEditor(project: Project, file: VirtualFile): FileEditor {
         LOG.info("Creating Mermaid editor for: ${file.path}")
+        logTextMateDescriptor(file)
         // Check if JCEF is supported
         if (!MermaidPreviewEditor.isJcefSupported()) {
             // Fall back to text editor only if JCEF is not supported
@@ -55,5 +58,21 @@ class MermaidSplitEditorProvider : FileEditorProvider, DumbAware {
 
     private companion object {
         val LOG: Logger = Logger.getInstance(MermaidSplitEditorProvider::class.java)
+    }
+
+    private fun logTextMateDescriptor(file: VirtualFile) {
+        try {
+            val descriptor = TextMateService.getInstance().getLanguageDescriptorByFileName(file.name)
+            val scopeName = descriptor?.rootScopeName?.toString() ?: "<none>"
+            val doc = FileDocumentManager.getInstance().getDocument(file)
+            val firstLine = doc?.getLineStartOffset(0)?.let { start ->
+                val end = doc.getLineEndOffset(0)
+                doc.getText(com.intellij.openapi.util.TextRange(start, end)).trim()
+            } ?: ""
+            val hasClassDiagram = firstLine.contains("classDiagram")
+            LOG.info("TextMate descriptor: scope=$scopeName, hasClassDiagram=$hasClassDiagram")
+        } catch (e: Exception) {
+            LOG.warn("TextMate descriptor log failed", e)
+        }
     }
 }
