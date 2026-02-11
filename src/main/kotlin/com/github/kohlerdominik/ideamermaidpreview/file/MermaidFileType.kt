@@ -1,13 +1,13 @@
 package com.github.kohlerdominik.ideamermaidpreview.file
 
 import com.intellij.openapi.fileTypes.LanguageFileType
-import com.intellij.openapi.fileTypes.PlainTextLanguage
+import com.github.kohlerdominik.ideamermaidpreview.language.MermaidLanguage
 import javax.swing.Icon
 
 /**
  * File type for Mermaid diagram files (.mmd and .mermaid extensions).
  */
-object MermaidFileType : LanguageFileType(PlainTextLanguage.INSTANCE) {
+object MermaidFileType : LanguageFileType(MermaidLanguage) {
     override fun getName(): String = "Mermaid"
     
     override fun getDescription(): String = "Mermaid diagram file"
