@@ -68,15 +68,36 @@ class MermaidSplitEditorProvider : FileEditorProvider, DumbAware {
             val hasDescriptor = descriptor != null
             val extDescriptor = TextMateService.getInstance().getLanguageDescriptorByExtension(file.extension)
             val hasExtDescriptor = extDescriptor != null
+            val scopeByName = descriptor?.let { readRootScopeName(it) } ?: "<none>"
+            val scopeByExt = extDescriptor?.let { readRootScopeName(it) } ?: "<none>"
             val doc = FileDocumentManager.getInstance().getDocument(file)
             val firstLine = doc?.getLineStartOffset(0)?.let { start ->
                 val end = doc.getLineEndOffset(0)
                 doc.getText(com.intellij.openapi.util.TextRange(start, end)).trim()
             } ?: ""
             val hasClassDiagram = firstLine.contains("classDiagram")
-            LOG.info("TextMate descriptor: present=$hasDescriptor, byExtension=$hasExtDescriptor, hasClassDiagram=$hasClassDiagram")
+            LOG.info(
+                "TextMate descriptor: present=$hasDescriptor, byExtension=$hasExtDescriptor, " +
+                    "scopeByName=$scopeByName, scopeByExt=$scopeByExt, hasClassDiagram=$hasClassDiagram"
+            )
         } catch (e: Exception) {
             LOG.warn("TextMate descriptor log failed", e)
+        }
+    }
+
+    private fun readRootScopeName(descriptor: Any): String {
+        return try {
+            val method = descriptor.javaClass.methods.firstOrNull { it.name == "getRootScopeName" }
+            val value = method?.invoke(descriptor)
+            value?.toString() ?: "<none>"
+        } catch (_: Exception) {
+            try {
+                val field = descriptor.javaClass.getDeclaredField("rootScopeName")
+                field.isAccessible = true
+                field.get(descriptor)?.toString() ?: "<none>"
+            } catch (_: Exception) {
+                "<unknown>"
+            }
         }
     }
 
