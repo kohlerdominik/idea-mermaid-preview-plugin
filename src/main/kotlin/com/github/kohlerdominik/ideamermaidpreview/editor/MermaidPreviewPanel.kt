@@ -24,12 +24,16 @@ import javax.swing.JPanel
  */
 class MermaidPreviewPanel(
 ) : Disposable {
-    
+
     private val browser = JBCefBrowser()
     private val panel = JPanel(BorderLayout())
     private val updateAlarm = Alarm(Alarm.ThreadToUse.POOLED_THREAD, this)
     private var textEditor: TextEditor? = null
-    private var documentListener: DocumentListener? = null
+    private val documentListener = object : DocumentListener {
+        override fun documentChanged(event: DocumentEvent) {
+            scheduleUpdate(event.document)
+        }
+    }
     
     @Volatile
     private var isPageLoaded = false
@@ -58,19 +62,9 @@ class MermaidPreviewPanel(
      * Attach this preview to a text editor to enable reactive updates.
      */
     fun attachToEditor(editor: TextEditor) {
+        textEditor?.editor?.document?.removeDocumentListener(documentListener)
         textEditor = editor
-        
-        // Remove old listener if exists
-        documentListener?.let { editor.editor.document.removeDocumentListener(it) }
-        
-        // Create and add new document listener
-        val listener = object : DocumentListener {
-            override fun documentChanged(event: DocumentEvent) {
-                scheduleUpdate(editor.editor.document)
-            }
-        }
-        documentListener = listener
-        editor.editor.document.addDocumentListener(listener, this)
+        editor.editor.document.addDocumentListener(documentListener, this)
         
         // Initial render if page is already loaded
         if (isPageLoaded) {
@@ -85,7 +79,7 @@ class MermaidPreviewPanel(
         updateAlarm.cancelAllRequests()
         updateAlarm.addRequest({
             renderCurrentContent(document)
-        }, 300)
+        }, UPDATE_DELAY_MS)
     }
     
     /**
@@ -93,9 +87,8 @@ class MermaidPreviewPanel(
      */
     private fun renderCurrentContent(document: Document) {
         if (!isPageLoaded) return
-        
-        val content = document.text
-        val escapedContent = content
+
+        val escapedContent = document.text
             .replace("\\", "\\\\")
             .replace("`", "\\`")
             .replace("$", "\\$")
@@ -178,7 +171,12 @@ class MermaidPreviewPanel(
     }
     
     override fun dispose() {
+        textEditor?.editor?.document?.removeDocumentListener(documentListener)
         updateAlarm.cancelAllRequests()
         Disposer.dispose(browser)
+    }
+
+    private companion object {
+        const val UPDATE_DELAY_MS = 300
     }
 }
