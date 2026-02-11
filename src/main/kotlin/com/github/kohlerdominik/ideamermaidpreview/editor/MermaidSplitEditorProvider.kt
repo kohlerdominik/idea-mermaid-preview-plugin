@@ -63,14 +63,14 @@ class MermaidSplitEditorProvider : FileEditorProvider, DumbAware {
     private fun logTextMateDescriptor(file: VirtualFile) {
         try {
             val descriptor = TextMateService.getInstance().getLanguageDescriptorByFileName(file.name)
-            val scopeName = descriptor?.rootScopeName?.toString() ?: "<none>"
+            val hasDescriptor = descriptor != null
             val doc = FileDocumentManager.getInstance().getDocument(file)
             val firstLine = doc?.getLineStartOffset(0)?.let { start ->
                 val end = doc.getLineEndOffset(0)
                 doc.getText(com.intellij.openapi.util.TextRange(start, end)).trim()
             } ?: ""
             val hasClassDiagram = firstLine.contains("classDiagram")
-            LOG.info("TextMate descriptor: scope=$scopeName, hasClassDiagram=$hasClassDiagram")
+            LOG.info("TextMate descriptor: present=$hasDescriptor, hasClassDiagram=$hasClassDiagram")
         } catch (e: Exception) {
             LOG.warn("TextMate descriptor log failed", e)
         }
