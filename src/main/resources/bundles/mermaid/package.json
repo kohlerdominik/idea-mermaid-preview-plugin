@@ -7,15 +7,15 @@
   "contributes": {
     "languages": [
       {
-        "id": "Mermaid",
+        "id": "mermaid",
         "aliases": ["Mermaid", "mermaid"],
-        "extensions": [".mmd", ".mermaid"],
+        "extensions": [".mermaid", ".mmd"],
         "configuration": "./language-configuration.json"
       }
     ],
     "grammars": [
       {
-        "language": "Mermaid",
+        "language": "mermaid",
         "scopeName": "source.mermaid",
         "path": "./syntaxes/mermaid.tmLanguage.json"
       }
