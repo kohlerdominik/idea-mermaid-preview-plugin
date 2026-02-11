@@ -6,12 +6,11 @@ import com.intellij.openapi.editor.Document
 import com.intellij.openapi.editor.event.DocumentEvent
 import com.intellij.openapi.editor.event.DocumentListener
 import com.intellij.openapi.fileEditor.TextEditor
-import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.Disposer
-import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.ui.jcef.JBCefBrowser
-import com.intellij.ui.jcef.JBCefJSQuery
 import com.intellij.util.Alarm
+import com.intellij.openapi.editor.colors.EditorColorsManager
+import com.intellij.ui.JBColor
 import com.intellij.util.ui.UIUtil
 import org.cef.browser.CefBrowser
 import org.cef.browser.CefFrame
@@ -24,8 +23,6 @@ import javax.swing.JPanel
  * Panel that displays a live preview of Mermaid diagrams using JBCefBrowser.
  */
 class MermaidPreviewPanel(
-    private val project: Project,
-    private val file: VirtualFile
 ) : Disposable {
     
     private val browser = JBCefBrowser()
@@ -116,7 +113,8 @@ class MermaidPreviewPanel(
      * Get the current IDE theme for Mermaid.
      */
     private fun getTheme(): String {
-        return if (UIUtil.isUnderDarcula()) "dark" else "default"
+        val background = EditorColorsManager.getInstance().globalScheme.defaultBackground
+        return if (JBColor.isBright(background)) "default" else "dark"
     }
     
     /**

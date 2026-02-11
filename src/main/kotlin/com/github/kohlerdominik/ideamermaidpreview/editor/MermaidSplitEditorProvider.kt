@@ -39,7 +39,7 @@ class MermaidSplitEditorProvider : FileEditorProvider, DumbAware {
         val textEditor = TextEditorProvider.getInstance().createEditor(project, file) as TextEditor
         
         // Create preview editor
-        val previewEditor = MermaidPreviewEditor(project, file)
+        val previewEditor = MermaidPreviewEditor(file)
         
         // Attach preview to text editor for reactive updates
         previewEditor.attachToEditor(textEditor)

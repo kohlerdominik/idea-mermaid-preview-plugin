@@ -3,8 +3,6 @@ package com.github.kohlerdominik.ideamermaidpreview.editor
 import com.intellij.openapi.fileEditor.FileEditor
 import com.intellij.openapi.fileEditor.FileEditorState
 import com.intellij.openapi.fileEditor.TextEditor
-import com.intellij.openapi.fileEditor.impl.text.TextEditorProvider
-import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.Disposer
 import com.intellij.openapi.util.UserDataHolderBase
 import com.intellij.openapi.vfs.VirtualFile
@@ -17,11 +15,10 @@ import javax.swing.JComponent
  * This editor loads the Mermaid rendering HTML and updates it reactively.
  */
 class MermaidPreviewEditor(
-    private val project: Project,
     private val file: VirtualFile
 ) : UserDataHolderBase(), FileEditor {
     
-    private val preview = MermaidPreviewPanel(project, file)
+    private val preview = MermaidPreviewPanel()
     
     override fun getComponent(): JComponent = preview.component
     

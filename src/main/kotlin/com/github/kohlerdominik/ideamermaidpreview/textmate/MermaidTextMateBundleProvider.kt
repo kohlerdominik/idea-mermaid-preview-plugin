@@ -42,7 +42,7 @@ class MermaidTextMateBundleProvider : TextMateBundleProvider {
             }
 
             val packageText = Files.readString(packageJson, StandardCharsets.UTF_8)
-            val grammarCount = Regex("\\\"scopeName\\\"\\s*:\\s*\\\"[^\\\"]+\\\"").findAll(packageText).count()
+            val grammarCount = Regex("""\"scopeName\"\s*:\s*\"[^\"]+\"""").findAll(packageText).count()
             val hasClassDiagram = packageText.contains("source.mermaid.classDiagram")
             val syntaxesDir = bundlePath.resolve("syntaxes")
             val syntaxesCount = if (Files.isDirectory(syntaxesDir)) {
