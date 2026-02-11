@@ -10,7 +10,7 @@ import com.intellij.openapi.util.Disposer
 import com.intellij.ui.jcef.JBCefBrowser
 import com.intellij.util.Alarm
 import com.intellij.openapi.editor.colors.EditorColorsManager
-import com.intellij.ui.JBColor
+import com.intellij.ui.ColorUtil
 import com.intellij.util.ui.UIUtil
 import org.cef.browser.CefBrowser
 import org.cef.browser.CefFrame
@@ -114,7 +114,7 @@ class MermaidPreviewPanel(
      */
     private fun getTheme(): String {
         val background = EditorColorsManager.getInstance().globalScheme.defaultBackground
-        return if (JBColor.isBright(background)) "default" else "dark"
+        return if (ColorUtil.isDark(background)) "dark" else "default"
     }
     
     /**
